@@ -1,0 +1,36 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Output log files
+*.log
+logs/
+*.pid
+*.seed
+*.pid.lock
+
+# Directory for local environment variables
+.env
+
+# Cache directories
+.cache/
+dist/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# IDE-specific files
+.vscode/
+.idea/
+
+# Test and coverage files
+coverage/
+*.test.js
+*.spec.js
+
+# Build and production files
+build/
+public/
