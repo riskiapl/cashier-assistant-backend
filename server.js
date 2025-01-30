@@ -4,15 +4,15 @@ const app = express();
 // Middleware untuk membaca request body JSON
 app.use(express.json());
 
-// Route sederhana
-app.get("/", (req, res) => {
-  res.send("Hello, Express!");
-});
-
 // Jalankan server
 const PORT = 8000;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
+});
+
+// Route sederhana
+app.get("/", (req, res) => {
+  res.send("Hello, Express!");
 });
 
 app.post("/api/data", (req, res) => {
