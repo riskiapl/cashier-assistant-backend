@@ -1,21 +1,18 @@
+require("dotenv").config();
 const express = require("express");
+const authRoutes = require("./routes/authRoutes");
+
 const app = express();
+const port = process.env.PORT || 8000;
 
-// Middleware untuk membaca request body JSON
 app.use(express.json());
-
-// Jalankan server
-const PORT = 8000;
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
+app.use("/api/auth", authRoutes);
 
 // Route sederhana
 app.get("/", (req, res) => {
   res.send("Hello, Express!");
 });
 
-app.post("/api/data", (req, res) => {
-  const data = req.body;
-  res.json({ message: "Data received", data });
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
 });
