@@ -8,8 +8,8 @@ async function registerMember(username, password) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const query =
-    "INSERT INTO members (username, password) VALUES ($1, $2) RETURNING *";
-  const values = [username, hashedPassword];
+    "INSERT INTO members (username, password, plain_password) VALUES ($1, $2, $3) RETURNING *";
+  const values = [username, hashedPassword, password];
 
   const result = await pool.query(query, values);
   return result.rows[0];
