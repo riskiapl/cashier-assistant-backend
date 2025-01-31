@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "migrate:create": "sequelize-cli model:generate --name Member --attributes username:string,password:string, created_at:date",
+    "migrate:create": "sequelize-cli model:generate --name member --attributes username:string,password:string, created_at:date",
     "migrate": "sequelize-cli db:migrate"
   },
   "keywords": [],
