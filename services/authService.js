@@ -34,6 +34,7 @@ async function loginMember(username, password) {
     { id: member.id, username: member.username },
     process.env.JWT_SECRET,
     {
+      // expiresIn: "1d",
       expiresIn: "1h",
     }
   );
