@@ -4,12 +4,27 @@ const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
 
-async function registerMember(username, password) {
+async function registerMember(username, email, password) {
+  if (!username || !email || !password) {
+    throw new Error("Username, email, dan password tidak boleh kosong");
+  }
+
   const hashedPassword = await bcrypt.hash(password, 10);
 
+  const existingUserQuery =
+    "SELECT * FROM members WHERE username = $1 OR email = $2";
+  const existingUserResult = await pool.query(existingUserQuery, [
+    username,
+    email,
+  ]);
+
+  if (existingUserResult.rows.length > 0) {
+    throw new Error("Username atau email sudah terdaftar");
+  }
+
   const query =
-    "INSERT INTO members (username, password, plain_password) VALUES ($1, $2, $3) RETURNING *";
-  const values = [username, hashedPassword, password];
+    "INSERT INTO members (username, password, plain_password, email) VALUES ($1, $2, $3, $4) RETURNING *";
+  const values = [username, hashedPassword, password, email];
 
   const result = await pool.query(query, values);
   return result.rows[0];

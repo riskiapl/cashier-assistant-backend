@@ -2,8 +2,8 @@ const { registerMember, loginMember } = require("../services/authService");
 
 async function register(req, res) {
   try {
-    const { username, password } = req.body;
-    const newMember = await registerMember(username, password);
+    const { username, email, password } = req.body;
+    const newMember = await registerMember(username, email, password);
     res.status(201).json({
       message: "Registrasi berhasil",
       member: newMember,
