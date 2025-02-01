@@ -9,7 +9,8 @@
     "migrate:createdb": "sequelize-cli db:create",
     "migrate:create": "sequelize-cli model:generate --name member --attributes username:string,password:string, created_at:date",
     "migrate": "sequelize-cli db:migrate",
-    "migrate:undo": "sequelize-cli db:migrate:undo"
+    "migrate:undo": "sequelize-cli db:migrate:undo",
+    "migrate:undoall": "sequelize-cli db:migrate:undo:all"
   },
   "keywords": [],
   "author": "",

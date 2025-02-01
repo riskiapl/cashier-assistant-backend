@@ -4,9 +4,13 @@ async function register(req, res) {
   try {
     const { username, password } = req.body;
     const newMember = await registerMember(username, password);
-    res.status(201).json({ message: "Registrasi berhasil", member: newMember });
+    res.status(201).json({
+      message: "Registrasi berhasil",
+      member: newMember,
+      status: "success",
+    });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ message: error.message, status: "failed" });
   }
 }
 
@@ -14,9 +18,11 @@ async function login(req, res) {
   try {
     const { username, password } = req.body;
     const token = await loginMember(username, password);
-    res.status(200).json({ message: "Login berhasil", token });
+    res
+      .status(200)
+      .json({ message: "Login berhasil", token, status: "success" });
   } catch (error) {
-    res.status(401).json({ error: error.message });
+    res.status(401).json({ message: error.message, status: "failed" });
   }
 }
 
