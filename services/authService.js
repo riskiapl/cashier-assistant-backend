@@ -2,6 +2,7 @@ const pool = require("../config/db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { sendMail } = require("../config/mailer");
+const { otpMail } = require("../config/helper");
 
 require("dotenv").config();
 
@@ -36,7 +37,7 @@ async function registerMember(username, email, password) {
 
   // send OTP to email
   const emailSubject = "Your OTP Code";
-  const emailBody = `Your OTP code is ${otpCode}. It will expire in 15 minutes.`;
+  const emailBody = otpMail(otpCode, "15 minutes");
 
   await sendMail(email, emailSubject, emailBody);
 

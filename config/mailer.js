@@ -13,11 +13,11 @@ const transporter = nodemailer.createTransport({
 
 const sendMail = (to, subject, text, html) => {
   const mailOptions = {
-    from: '"Cashier Asistant" <cashierassistantofficial@gmail.com>', // Replace with your name and email
+    from: '"Cashier Assistant" <cashierassistantofficial@gmail.com>', // Replace with your name and email
     to: to,
     subject: subject,
-    text: text,
-    html: html || "",
+    // text: text,
+    html: text || "",
   };
 
   return transporter.sendMail(mailOptions);
