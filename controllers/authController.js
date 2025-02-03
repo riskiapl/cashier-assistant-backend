@@ -20,8 +20,8 @@ async function register(req, res) {
 
 async function login(req, res) {
   try {
-    const { username, password } = req.body;
-    const token = await loginMember(username, password);
+    const { userormail, password } = req.body;
+    const token = await loginMember(userormail, password);
     res
       .status(200)
       .json({ message: "Login berhasil", token, status: "success" });

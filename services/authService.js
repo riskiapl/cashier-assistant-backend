@@ -50,12 +50,12 @@ async function registerMember(username, email, password) {
   return result.rows[0];
 }
 
-async function loginMember(username, password) {
-  const query = "SELECT * FROM members WHERE username = $1";
-  const result = await pool.query(query, [username]);
+async function loginMember(userormail, password) {
+  const query = "SELECT * FROM members WHERE username = $1 OR email = $1";
+  const result = await pool.query(query, [userormail]);
 
   if (result.rows.length === 0) {
-    throw new Error("Username tidak ditemukan");
+    throw new Error("Member tidak ditemukan");
   }
 
   const member = result.rows[0];
