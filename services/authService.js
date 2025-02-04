@@ -12,18 +12,73 @@ async function registerMember(username, email, password) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   // pengecekan apakah username atau email sudah terdaftar
-  const existingUserQuery =
-    "SELECT * FROM members WHERE username = $1 OR email = $2";
-  const existingUserResult = await pool.query(existingUserQuery, [
+  const existingEmailQuery = "SELECT * FROM members WHERE email = $1";
+  const existingEmailResult = await pool.query(existingEmailQuery, [email]);
+
+  if (existingEmailResult.rows.length > 0) {
+    throw new Error("Email sudah terdaftar");
+  }
+
+  const existingUsernameQuery = "SELECT * FROM members WHERE username = $1";
+  const existingUsernameResult = await pool.query(existingUsernameQuery, [
     username,
+  ]);
+
+  if (existingUsernameResult.rows.length > 0) {
+    throw new Error("Username sudah terdaftar, silakan gunakan username lain");
+  }
+
+  const existingPendingUsernameQuery =
+    "SELECT * FROM pending_members WHERE username = $1 AND email != $2";
+  const existingPendingUsernameResult = await pool.query(
+    existingPendingUsernameQuery,
+    [username, email]
+  );
+
+  if (existingPendingUsernameResult.rows.length > 0) {
+    throw new Error("Username sudah terdaftar, silakan gunakan username lain");
+  }
+
+  // generate and send OTP
+  await generateAndSendOtp(email);
+
+  // add user to pending_members table
+  // pengecekan apakah email sudah ada di tabel pending_members
+  const existingPendingUserQuery =
+    "SELECT * FROM pending_members WHERE email = $1";
+  const existingPendingUserResult = await pool.query(existingPendingUserQuery, [
     email,
   ]);
 
-  if (existingUserResult.rows.length > 0) {
-    throw new Error("Username atau email sudah terdaftar");
+  if (existingPendingUserResult.rows.length > 0) {
+    const updatePendingUserQuery = `
+      UPDATE pending_members
+      SET username = $1, password = $2, plain_password = $3, email = $4
+      WHERE username = $1 OR email = $4
+      RETURNING *`;
+    const updatePendingUserValues = [username, hashedPassword, password, email];
+    const updateResult = await pool.query(
+      updatePendingUserQuery,
+      updatePendingUserValues
+    );
+    const updatedUser = updateResult.rows[0];
+    delete updatedUser.password;
+    delete updatedUser.plain_password;
+    return updatedUser;
   }
 
-  // generate OTP
+  const query =
+    "INSERT INTO pending_members (username, password, plain_password, email) VALUES ($1, $2, $3, $4) RETURNING *";
+  const values = [username, hashedPassword, password, email];
+
+  const result = await pool.query(query, values);
+  const newUser = result.rows[0];
+  delete newUser.password;
+  delete newUser.plain_password;
+  return newUser;
+}
+
+async function generateAndSendOtp(email) {
   const otpCode = Math.floor(10000 + Math.random() * 90000).toString();
   const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // OTP expires in 15 minutes
 
@@ -38,14 +93,26 @@ async function registerMember(username, email, password) {
   const emailBody = otpMail(otpCode, "15 minutes");
 
   await sendMail(email, emailSubject, emailBody);
+}
 
-  // add user to pending_members table
-  const query =
-    "INSERT INTO pending_members (username, password, plain_password, email) VALUES ($1, $2, $3, $4) RETURNING *";
-  const values = [username, hashedPassword, password, email];
+async function resendOtp(email) {
+  const existingOtpQuery =
+    "SELECT * FROM otps WHERE email = $1 ORDER BY id DESC LIMIT 1";
+  const existingOtpResult = await pool.query(existingOtpQuery, [email]);
 
-  const result = await pool.query(query, values);
-  return result.rows[0];
+  if (existingOtpResult.rows.length === 0) {
+    throw new Error("OTP tidak ditemukan, silakan daftar terlebih dahulu");
+  }
+
+  const otpEntry = existingOtpResult.rows[0];
+  const currentTime = new Date();
+
+  if (currentTime < new Date(otpEntry.expires_at)) {
+    throw new Error("OTP masih berlaku, silakan cek email Anda");
+  }
+
+  await generateAndSendOtp(email);
+  return { message: "OTP baru telah dikirim ke email Anda" };
 }
 
 async function loginMember(userormail, password) {
