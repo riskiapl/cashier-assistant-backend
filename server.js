@@ -7,6 +7,7 @@ const { deleteExpiredPendingMembers } = require("./services/helperService");
 const app = express();
 const port = process.env.PORT || 8000;
 
+// Middleware
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 
@@ -15,6 +16,7 @@ app.get("/", (req, res) => {
   res.send("Hello, Express!");
 });
 
+// Jalankan server
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
