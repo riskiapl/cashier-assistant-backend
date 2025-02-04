@@ -18,10 +18,6 @@ async function deleteExpiredPendingMembers() {
         },
       },
     });
-
-    console.log(
-      "Data pending_members yang sudah lebih dari 1 hari telah dihapus"
-    );
   } catch (error) {
     console.error("Gagal menghapus data:", error);
   }
