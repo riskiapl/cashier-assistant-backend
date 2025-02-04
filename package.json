@@ -10,7 +10,8 @@
     "migrate:create": "sequelize-cli model:generate --name member --attributes username:string,password:string, created_at:date",
     "migrate": "sequelize-cli db:migrate",
     "migrate:undo": "sequelize-cli db:migrate:undo",
-    "migrate:undoall": "sequelize-cli db:migrate:undo:all"
+    "migrate:undoall": "sequelize-cli db:migrate:undo:all",
+    "migrate:createmodel": "sequelize-auto -o \"./models\" -d cashier_assistant -h localhost -u postgres -p 5432 -x password -e postgres"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +22,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
+    "node-cron": "^3.0.3",
     "nodemailer": "^6.10.0",
     "pg": "^8.13.1",
     "pg-hstore": "^2.3.4",
@@ -28,6 +30,7 @@
     "sequelize-cli": "^6.6.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.9",
+    "sequelize-auto": "^0.8.8"
   }
 }

@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const { sendMail } = require("../config/mailer");
 const { otpMail } = require("../config/helper");
 
-require("dotenv").config();
+// require("dotenv").config();
 
 async function registerMember(username, email, password) {
   if (!username || !email || !password) {
