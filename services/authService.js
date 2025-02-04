@@ -6,26 +6,29 @@ const { otpMail } = require("../config/helper");
 
 async function registerMember(username, email, password) {
   if (!username || !email || !password) {
-    throw new Error("Username, email, dan password tidak boleh kosong");
+    throw new Error("Username, email, and password cannot be empty");
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  // pengecekan apakah username atau email sudah terdaftar
+  // Check if email is already registered
   const existingEmailQuery = "SELECT * FROM members WHERE email = $1";
   const existingEmailResult = await pool.query(existingEmailQuery, [email]);
 
   if (existingEmailResult.rows.length > 0) {
-    throw new Error("Email sudah terdaftar");
+    throw new Error("Email is already registered");
   }
 
+  // Check if username is already registered
   const existingUsernameQuery = "SELECT * FROM members WHERE username = $1";
   const existingUsernameResult = await pool.query(existingUsernameQuery, [
     username,
   ]);
 
   if (existingUsernameResult.rows.length > 0) {
-    throw new Error("Username sudah terdaftar, silakan gunakan username lain");
+    throw new Error(
+      "Username is already registered, please use another username"
+    );
   }
 
   const existingPendingUsernameQuery =
@@ -36,14 +39,16 @@ async function registerMember(username, email, password) {
   );
 
   if (existingPendingUsernameResult.rows.length > 0) {
-    throw new Error("Username sudah terdaftar, silakan gunakan username lain");
+    throw new Error(
+      "Username is already registered, please use another username"
+    );
   }
 
-  // generate and send OTP
+  // Generate and send OTP
   await generateAndSendOtp(email);
 
-  // add user to pending_members table
-  // pengecekan apakah email sudah ada di tabel pending_members
+  // Add user to pending_members table
+  // Check if email is already in pending_members table
   const existingPendingUserQuery =
     "SELECT * FROM pending_members WHERE email = $1";
   const existingPendingUserResult = await pool.query(existingPendingUserQuery, [
@@ -82,13 +87,27 @@ async function generateAndSendOtp(email) {
   const otpCode = Math.floor(10000 + Math.random() * 90000).toString();
   const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // OTP expires in 15 minutes
 
-  const otpQuery =
-    "INSERT INTO otps (email, otp_code, expires_at, is_verified) VALUES ($1, $2, $3, $4)";
-  const otpValues = [email, otpCode, expiresAt, false];
+  // Check if email already has an OTP
+  const existingOtpQuery =
+    "SELECT * FROM otps WHERE email = $1 ORDER BY id DESC LIMIT 1";
+  const existingOtpResult = await pool.query(existingOtpQuery, [email]);
 
-  await pool.query(otpQuery, otpValues);
+  if (existingOtpResult.rows.length > 0) {
+    const updateOtpQuery = `
+      UPDATE otps
+      SET otp_code = $1, expires_at = $2, is_verified = $3
+      WHERE email = $4
+    `;
+    const updateOtpValues = [otpCode, expiresAt, false, email];
+    await pool.query(updateOtpQuery, updateOtpValues);
+  } else {
+    const otpQuery =
+      "INSERT INTO otps (email, otp_code, expires_at, is_verified) VALUES ($1, $2, $3, $4)";
+    const otpValues = [email, otpCode, expiresAt, false];
+    await pool.query(otpQuery, otpValues);
+  }
 
-  // send OTP to email
+  // Send OTP to email
   const emailSubject = "Your OTP Code";
   const emailBody = otpMail(otpCode, "15 minutes");
 
@@ -101,18 +120,18 @@ async function resendOtp(email) {
   const existingOtpResult = await pool.query(existingOtpQuery, [email]);
 
   if (existingOtpResult.rows.length === 0) {
-    throw new Error("OTP tidak ditemukan, silakan daftar terlebih dahulu");
+    throw new Error("Email not found, please register first");
   }
 
   const otpEntry = existingOtpResult.rows[0];
   const currentTime = new Date();
 
   if (currentTime < new Date(otpEntry.expires_at)) {
-    throw new Error("OTP masih berlaku, silakan cek email Anda");
+    throw new Error("OTP is still valid, please check your email");
   }
 
   await generateAndSendOtp(email);
-  return { message: "OTP baru telah dikirim ke email Anda" };
+  return { message: "A new OTP has been sent to your email" };
 }
 
 async function loginMember(userormail, password) {
@@ -120,21 +139,20 @@ async function loginMember(userormail, password) {
   const result = await pool.query(query, [userormail]);
 
   if (result.rows.length === 0) {
-    throw new Error("Member tidak ditemukan");
+    throw new Error("Member not found");
   }
 
   const member = result.rows[0];
   const isMatch = await bcrypt.compare(password, member.password);
 
   if (!isMatch) {
-    throw new Error("Password salah");
+    throw new Error("Incorrect password");
   }
 
   const token = jwt.sign(
     { id: member.id, username: member.username },
     process.env.JWT_SECRET,
     {
-      // expiresIn: "1d",
       expiresIn: "1h",
     }
   );
@@ -147,29 +165,29 @@ async function verifyOtp(email, otpCode) {
   const result = await pool.query(query, [email, otpCode]);
 
   if (result.rows.length === 0) {
-    throw new Error("OTP tidak ditemukan atau salah");
+    throw new Error("OTP not found or incorrect");
   }
 
   const otpEntry = result.rows[0];
 
   if (otpEntry.is_verified) {
-    throw new Error("OTP sudah pernah digunakan");
+    throw new Error("OTP has already been used");
   }
 
   const currentTime = new Date();
   if (currentTime > new Date(otpEntry.expires_at)) {
-    throw new Error("OTP sudah kadaluarsa");
+    throw new Error("OTP has expired");
   }
 
   const updateQuery = "UPDATE otps SET is_verified = $1 WHERE id = $2";
   await pool.query(updateQuery, [true, otpEntry.id]);
 
   const pendingMemberQuery =
-    "SELECT * FROM pending_members WHERE email = $1 ORDER BY id DESC";
+    "SELECT * FROM pending_members WHERE email = $1 ORDER BY id DESC LIMIT 1";
   const pendingMemberResult = await pool.query(pendingMemberQuery, [email]);
 
   if (pendingMemberResult.rows.length === 0) {
-    throw new Error("Pending member tidak ditemukan");
+    throw new Error("Pending member not found");
   }
 
   const pendingMember = pendingMemberResult.rows[0];
@@ -191,7 +209,7 @@ async function verifyOtp(email, otpCode) {
     "DELETE FROM pending_members WHERE email = $1";
   await pool.query(deletePendingMemberQuery, [email]);
 
-  return true;
+  return { message: "OTP successfully verified" };
 }
 
-module.exports = { registerMember, loginMember, verifyOtp };
+module.exports = { registerMember, loginMember, verifyOtp, resendOtp };
