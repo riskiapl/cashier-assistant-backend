@@ -11,14 +11,14 @@ module.exports = {
      */
 
     // Menambahkan kolom updated_at ke tabel otps
-    await queryInterface.addColumn("otps", "updated_at", {
+    await queryInterface.addColumn("otps", "updatedAt", {
       type: Sequelize.DATE,
       allowNull: false,
       defaultValue: Sequelize.fn("NOW"),
     });
 
     // Menambahkan kolom updated_at ke tabel pending_members
-    await queryInterface.addColumn("pending_members", "updated_at", {
+    await queryInterface.addColumn("pending_members", "updatedAt", {
       type: Sequelize.DATE,
       allowNull: false,
       defaultValue: Sequelize.fn("NOW"),
@@ -34,9 +34,9 @@ module.exports = {
      */
 
     // Menghapus kolom updated_at dari tabel otps
-    await queryInterface.removeColumn("otps", "updated_at");
+    await queryInterface.removeColumn("otps", "updatedAt");
 
     // Menghapus kolom updated_at dari tabel pending_members
-    await queryInterface.removeColumn("pending_members", "updated_at");
+    await queryInterface.removeColumn("pending_members", "updatedAt");
   },
 };

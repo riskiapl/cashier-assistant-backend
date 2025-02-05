@@ -58,7 +58,7 @@ async function registerMember(username, email, password) {
   if (existingPendingUserResult.rows.length > 0) {
     const updatePendingUserQuery = `
       UPDATE pending_members
-      SET username = $1, password = $2, plain_password = $3, email = $4, updated_at = NOW()
+      SET username = $1, password = $2, plain_password = $3, email = $4, updatedAt = NOW()
       WHERE username = $1 OR email = $4
       RETURNING *`;
     const updatePendingUserValues = [username, hashedPassword, password, email];
@@ -95,7 +95,7 @@ async function generateAndSendOtp(email) {
   if (existingOtpResult.rows.length > 0) {
     const updateOtpQuery = `
       UPDATE otps
-      SET otp_code = $1, expires_at = $2, is_verified = $3, updated_at = NOW()
+      SET otp_code = $1, expires_at = $2, is_verified = $3, updatedAt = NOW()
       WHERE email = $4
     `;
     const updateOtpValues = [otpCode, expiresAt, false, email];
@@ -180,7 +180,7 @@ async function verifyOtp(email, otpCode) {
   }
 
   const updateQuery =
-    "UPDATE otps SET is_verified = $1, updated_at = NOW() WHERE id = $2";
+    "UPDATE otps SET is_verified = $1, updatedAt = NOW() WHERE id = $2";
   await pool.query(updateQuery, [true, otpEntry.id]);
 
   const pendingMemberQuery =

@@ -11,7 +11,7 @@ async function deleteExpiredPendingMembers() {
     // menggunakan Sequelize
     await pending_members.destroy({
       where: {
-        created_at: {
+        createdAt: {
           [db.Sequelize.Op.lt]: db.Sequelize.literal(
             "NOW() - INTERVAL '1 day'"
           ),
