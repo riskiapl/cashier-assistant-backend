@@ -29,7 +29,7 @@ const updateMember = async (req, res) => {
       member: updatedMember,
     });
   } catch (err) {
-    res.status(500).send({ message: "Error updating member data", error: err });
+    res.status(500).send({ message: err.message, error: err });
   }
 };
 
@@ -53,7 +53,7 @@ const updateAvatar = (req, res) => {
         member: updatedMember,
       });
     } catch (err) {
-      res.status(500).send({ message: "Error updating avatar", error: err });
+      res.status(500).send({ message: err.message, error: err });
     }
   });
 };

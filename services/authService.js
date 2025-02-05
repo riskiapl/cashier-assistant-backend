@@ -54,8 +54,6 @@ async function registerMember(username, email, password) {
       updated_at: new Date(),
     });
     const updatedUser = existingPendingUser.toJSON();
-    delete updatedUser.password;
-    delete updatedUser.plain_password;
     return updatedUser;
   }
 
@@ -66,8 +64,6 @@ async function registerMember(username, email, password) {
     email,
   });
   const newUserJson = newUser.toJSON();
-  delete newUserJson.password;
-  delete newUserJson.plain_password;
   return newUserJson;
 }
 
