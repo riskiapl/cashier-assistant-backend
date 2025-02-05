@@ -114,6 +114,17 @@ async function resendOtp(email) {
     throw new Error("Email not found, please register first");
   }
 
+  const pendingMember = await pending_members.findOne({
+    where: { email },
+  });
+
+  if (!pendingMember) {
+    await existingOtp.destroy();
+    throw new Error(
+      "Email not found in pending members, please register first"
+    );
+  }
+
   const currentTime = new Date();
 
   if (currentTime < new Date(existingOtp.expires_at)) {
