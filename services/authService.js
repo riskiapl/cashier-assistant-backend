@@ -13,14 +13,18 @@ async function registerMember(username, email, password) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   // Check if email is already registered
-  const existingEmail = await members.findOne({ where: { email } });
+  const existingEmail = await members.findOne({
+    where: { email, action_type: { [Op.ne]: "D" } },
+  });
 
   if (existingEmail) {
     throw new Error("Email is already registered");
   }
 
   // Check if username is already registered
-  const existingUsername = await members.findOne({ where: { username } });
+  const existingUsername = await members.findOne({
+    where: { username, action_type: { [Op.ne]: "D" } },
+  });
 
   if (existingUsername) {
     throw new Error(
@@ -124,6 +128,7 @@ async function loginMember(userormail, password) {
   const member = await members.findOne({
     where: {
       [Op.or]: [{ username: userormail }, { email: userormail }],
+      action_type: { [Op.ne]: "D" },
     },
   });
 
