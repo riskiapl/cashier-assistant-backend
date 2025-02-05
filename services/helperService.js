@@ -1,6 +1,6 @@
 const pool = require("../config/db");
 const db = require("../models");
-const { members, otps, pending_members } = db;
+const { pending_members } = db;
 
 async function deleteExpiredPendingMembers() {
   try {
@@ -11,7 +11,7 @@ async function deleteExpiredPendingMembers() {
     // menggunakan Sequelize
     await pending_members.destroy({
       where: {
-        createdAt: {
+        created_at: {
           [db.Sequelize.Op.lt]: db.Sequelize.literal(
             "NOW() - INTERVAL '1 day'"
           ),

@@ -14,6 +14,10 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
+      email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       password: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -22,15 +26,25 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn("now"),
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn("now"),
+      },
+      action_type: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: "I",
+      },
+      avatar: {
+        type: Sequelize.STRING,
+        allowNull: true,
+        defaultValue: null,
       },
     });
   },

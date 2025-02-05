@@ -4,7 +4,6 @@ const { Op } = require("sequelize");
 async function updateMemberData(memberId, updateData) {
   try {
     const member = await members.findByPk(memberId);
-    console.log(member, updateData, "masuk data");
     if (!member) {
       throw new Error("Member not found");
     }
