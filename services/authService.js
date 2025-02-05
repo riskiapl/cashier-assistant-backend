@@ -143,7 +143,12 @@ async function loginMember(userormail, password) {
   }
 
   const token = jwt.sign(
-    { id: member.id, username: member.username },
+    {
+      id: member.id,
+      username: member.username,
+      email: member.email,
+      status: member.status,
+    },
     process.env.JWT_SECRET,
     {
       expiresIn: "1h",
