@@ -36,7 +36,24 @@ async function updateMemberAvatar(memberId, avatarUrl) {
   }
 }
 
+async function deleteMemberData(memberId) {
+  try {
+    const member = await members.findByPk(memberId);
+    if (!member) {
+      throw new Error("Member not found");
+    }
+
+    member.action_type = "D";
+    member.updated_at = new Date();
+    await member.save();
+    return member;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   updateMemberData,
   updateMemberAvatar,
+  deleteMemberData,
 };

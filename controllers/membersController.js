@@ -3,6 +3,7 @@ const path = require("path");
 const {
   updateMemberData,
   updateMemberAvatar,
+  deleteMemberData,
 } = require("../services/membersService");
 
 // Multer configuration for file uploads
@@ -25,6 +26,7 @@ const updateMember = async (req, res) => {
   try {
     const updatedMember = await updateMemberData(memberId, updateData);
     res.status(200).send({
+      status: "success",
       message: "Member data updated successfully",
       member: updatedMember,
     });
@@ -49,6 +51,7 @@ const updateAvatar = (req, res) => {
     try {
       const updatedMember = await updateMemberAvatar(memberId, avatarPath);
       res.status(200).send({
+        status: "success",
         message: "Avatar updated successfully",
         member: updatedMember,
       });
@@ -56,6 +59,27 @@ const updateAvatar = (req, res) => {
       res.status(500).send({ message: err.message, error: err });
     }
   });
+};
+
+// Controller to delete a member
+const deleteMember = async (req, res) => {
+  const memberId = req.params.id;
+
+  try {
+    await deleteMemberData(memberId);
+    res.status(200).send({
+      status: "success",
+      message: "Member deleted successfully",
+    });
+  } catch (err) {
+    res.status(500).send({ message: err.message, error: err });
+  }
+};
+
+module.exports = {
+  updateMember,
+  updateAvatar,
+  deleteMember,
 };
 
 module.exports = {
