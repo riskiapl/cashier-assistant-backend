@@ -81,8 +81,3 @@ module.exports = {
   updateAvatar,
   deleteMember,
 };
-
-module.exports = {
-  updateMember,
-  updateAvatar,
-};

@@ -1,4 +1,4 @@
-const { members } = require("../models"); // Sesuaikan dengan model Anda
+// const { members } = require("../models"); // Sesuaikan dengan model Anda
 
 const checkMemberStatus = async (req, res, next) => {
   try {
@@ -9,7 +9,7 @@ const checkMemberStatus = async (req, res, next) => {
       return next();
     }
 
-    if (user.status === "member" && user.id === req.param.id) {
+    if (user.status === "member" && user.id == req.params.id) {
       // Member hanya bisa mengupdate data dirinya sendiri
       return next();
     }

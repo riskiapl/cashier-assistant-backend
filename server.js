@@ -5,7 +5,6 @@ const cron = require("node-cron");
 const { deleteExpiredPendingMembers } = require("./services/helperService");
 const membersRoutes = require("./routes/membersRoutes");
 const { verifyToken } = require("./middlewares/authMiddleware");
-const { checkMemberStatus } = require("./middlewares/membersMiddleware");
 const {
   cleanNullValues,
   removeUnusedKey,
@@ -16,10 +15,11 @@ const port = process.env.PORT || 8000;
 
 // Middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cleanNullValues);
 app.use(removeUnusedKey);
 app.use("/api/auth", authRoutes);
-app.use("/api/member", verifyToken, checkMemberStatus, membersRoutes);
+app.use("/api/member", verifyToken, membersRoutes);
 
 // Route sederhana
 app.get("/", (req, res) => {
