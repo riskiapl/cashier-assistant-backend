@@ -180,13 +180,6 @@ async function verifyOtp(email, otpCode) {
     throw new Error("OTP has already been used");
   }
 
-  const currentTime = new Date();
-  if (currentTime > new Date(otpEntry.expires_at)) {
-    throw new Error("OTP has expired");
-  }
-
-  await otpEntry.update({ is_verified: true, updated_at: new Date() });
-
   const pendingMember = await pending_members.findOne({
     where: { email },
     order: [["id", "DESC"]],
@@ -195,6 +188,13 @@ async function verifyOtp(email, otpCode) {
   if (!pendingMember) {
     throw new Error("Pending member not found");
   }
+
+  const currentTime = new Date();
+  if (currentTime > new Date(otpEntry.expires_at)) {
+    throw new Error("OTP has expired");
+  }
+
+  await otpEntry.update({ is_verified: true, updated_at: new Date() });
 
   await members.create({
     username: pendingMember.username,

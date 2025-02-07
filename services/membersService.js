@@ -4,7 +4,8 @@ const { Op } = require("sequelize");
 async function updateMemberData(memberId, updateData) {
   try {
     const member = await members.findByPk(memberId);
-    if (!member) {
+
+    if (!member || member.action_type === "D") {
       throw new Error("Member not found");
     }
 
@@ -22,7 +23,7 @@ async function updateMemberData(memberId, updateData) {
 async function updateMemberAvatar(memberId, avatarUrl) {
   try {
     const member = await members.findByPk(memberId);
-    if (!member) {
+    if (!member || member.action_type === "D") {
       throw new Error("Member not found");
     }
 
@@ -39,7 +40,7 @@ async function updateMemberAvatar(memberId, avatarUrl) {
 async function deleteMemberData(memberId) {
   try {
     const member = await members.findByPk(memberId);
-    if (!member) {
+    if (!member || member.action_type === "D") {
       throw new Error("Member not found");
     }
 

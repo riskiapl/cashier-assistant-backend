@@ -1,5 +1,3 @@
-// const { members } = require("../models"); // Sesuaikan dengan model Anda
-
 const checkMemberStatus = async (req, res, next) => {
   try {
     const user = req.user; // Asumsikan user sudah ada di request setelah pengecekan JWT
