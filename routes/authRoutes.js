@@ -13,6 +13,6 @@ router.post("/register", register);
 router.post("/login", login);
 router.post("/verify-otp", verify);
 router.put("/resend-otp", resend);
-router.get("/check-username", checkUsername);
+router.get("/check-username/:username", checkUsername);
 
 module.exports = router;

@@ -58,7 +58,7 @@ async function resend(req, res) {
 
 async function checkUsername(req, res) {
   try {
-    const { username } = req.body;
+    const { username } = req.params;
     const isTaken = await isUsernameTaken(username);
     if (isTaken) {
       res
