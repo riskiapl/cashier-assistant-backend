@@ -206,6 +206,7 @@ async function verifyOtp(email, otpCode) {
 }
 
 async function isUsernameTaken(username) {
+  console.log(username, "masuk username ===============");
   const existingUser = await members.findOne({
     where: { username },
   });
