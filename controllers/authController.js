@@ -3,6 +3,7 @@ const {
   loginMember,
   verifyOtp,
   resendOtp,
+  isUsernameTaken,
 } = require("../services/authService");
 
 async function register(req, res) {
@@ -55,4 +56,22 @@ async function resend(req, res) {
   }
 }
 
-module.exports = { register, login, verify, resend };
+async function checkUsername(req, res) {
+  try {
+    const { username } = req.body;
+    const isTaken = await isUsernameTaken(username);
+    if (isTaken) {
+      res
+        .status(200)
+        .json({ message: "Username is already taken", status: "failed" });
+    } else {
+      res
+        .status(200)
+        .json({ message: "Username is available", status: "success" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message, status: "failed" });
+  }
+}
+
+module.exports = { register, login, verify, resend, checkUsername };

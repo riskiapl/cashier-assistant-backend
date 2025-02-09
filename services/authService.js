@@ -205,4 +205,26 @@ async function verifyOtp(email, otpCode) {
   return { message: "OTP successfully verified" };
 }
 
-module.exports = { registerMember, loginMember, verifyOtp, resendOtp };
+async function isUsernameTaken(username) {
+  const existingUser = await members.findOne({
+    where: { username },
+  });
+
+  if (existingUser) {
+    return true;
+  }
+
+  const existingPendingUser = await pending_members.findOne({
+    where: { username },
+  });
+
+  return !!existingPendingUser;
+}
+
+module.exports = {
+  registerMember,
+  loginMember,
+  verifyOtp,
+  resendOtp,
+  isUsernameTaken,
+};
