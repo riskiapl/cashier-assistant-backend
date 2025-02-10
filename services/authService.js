@@ -5,7 +5,7 @@ const { sendMail } = require("../config/mailer");
 const { Op } = require("sequelize");
 const { otpMail } = require("../config/helper");
 
-async function registerMember(username, email, password) {
+async function registers(username, email, password) {
   if (!username || !email || !password) {
     throw new Error("Username, email, and password cannot be empty");
   }
@@ -101,7 +101,7 @@ async function generateAndSendOtp(email) {
   await sendMail(email, emailSubject, emailBody);
 }
 
-async function resendOtp(email) {
+async function resends(email) {
   const existingOtp = await otps.findOne({
     where: { email },
     order: [["id", "DESC"]],
@@ -132,7 +132,7 @@ async function resendOtp(email) {
   return { message: "A new OTP has been sent to your email" };
 }
 
-async function loginMember(userormail, password) {
+async function logins(userormail, password) {
   const member = await members.findOne({
     where: {
       [Op.or]: [{ username: userormail }, { email: userormail }],
@@ -166,7 +166,7 @@ async function loginMember(userormail, password) {
   return token;
 }
 
-async function verifyOtp(email, otpCode) {
+async function verifies(email, otpCode) {
   const otpEntry = await otps.findOne({ where: { email, otp_code: otpCode } });
 
   if (!otpEntry) {
@@ -205,7 +205,7 @@ async function verifyOtp(email, otpCode) {
   return { message: "OTP successfully verified" };
 }
 
-async function isUsernameTaken(username) {
+async function checkUsernames(username) {
   const existingUser = await members.findOne({
     where: { username },
   });
@@ -221,10 +221,44 @@ async function isUsernameTaken(username) {
   return !!existingPendingUser;
 }
 
+async function resetPasswords(email) {
+  const member = await members.findOne({ where: { email } });
+
+  if (!member) {
+    throw new Error("Member not found");
+  }
+
+  await generateAndSendOtp(email);
+  return { message: "OTP has been sent to your email for password reset" };
+}
+
+async function verifyResetPasswords(email, otpCode) {
+  const otpEntry = await otps.findOne({ where: { email, otp_code: otpCode } });
+
+  if (!otpEntry) {
+    throw new Error("OTP not found or incorrect");
+  }
+
+  if (otpEntry.is_verified) {
+    throw new Error("OTP has already been used");
+  }
+
+  const currentTime = new Date();
+  if (currentTime > new Date(otpEntry.expires_at)) {
+    throw new Error("OTP has expired");
+  }
+
+  await otpEntry.update({ is_verified: true, updated_at: new Date() });
+
+  return { message: "OTP successfully verified" };
+}
+
 module.exports = {
-  registerMember,
-  loginMember,
-  verifyOtp,
-  resendOtp,
-  isUsernameTaken,
+  registers,
+  logins,
+  verifies,
+  resends,
+  checkUsernames,
+  resetPasswords,
+  verifyResetPasswords,
 };
