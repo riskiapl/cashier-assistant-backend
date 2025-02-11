@@ -1,11 +1,11 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJyaXNraSIsImVtYWlsIjoicmlza2k5N0BnbWFpbC5jb20iLCJzdGF0dXMiOiJtZW1iZXIiLCJpYXQiOjE3MzkyNjQyNDEsImV4cCI6MTczOTI2Nzg0MX0.hlzB8AekT1ToYYJTDxxz91ZIfNErTAhqvcd6cR4vZv8
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJyaXNraSIsImVtYWlsIjoicmlza2k5N0BnbWFpbC5jb20iLCJzdGF0dXMiOiJhZG1pbiIsImlhdCI6MTczOTI4MTQ2MSwiZXhwIjoxNzM5Mjg1MDYxfQ.Sz-opuyaH6gvPFVYRft3ocf8R51bLT_yOpoWZVLNsoE
 
 ### Get All Members
 GET http://localhost:8000/api/member/view
 Authorization: Bearer {{token}}
 
 ### Get Member by ID
-GET http://localhost:8000/api/member/view/3
+GET http://localhost:8000/api/member/view/1
 Authorization: Bearer {{token}}
 
 ### Update Member Data

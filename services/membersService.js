@@ -77,10 +77,10 @@ async function updatePasswords(email, oldPassword, newPassword) {
 }
 
 async function getAllMembers() {
-  const members = await members.findAll({
+  const membersData = await members.findAll({
     where: { action_type: { [Op.ne]: "D" } },
   });
-  return members;
+  return membersData;
 }
 
 async function getMembers(memberId) {
