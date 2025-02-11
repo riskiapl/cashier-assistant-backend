@@ -6,6 +6,7 @@ const {
   checkUsernames,
   resetPasswords,
   verifyResetPasswords,
+  updatePasswords,
 } = require("../services/authService");
 
 async function register(req, res) {
@@ -96,6 +97,16 @@ async function verifyResetPassword(req, res) {
   }
 }
 
+async function updatePassword(req, res) {
+  try {
+    const { email, newPassword } = req.body;
+    const response = await updatePasswords(email, newPassword);
+    res.status(200).json({ message: response.message, status: "success" });
+  } catch (error) {
+    res.status(500).json({ message: error.message, status: "failed" });
+  }
+}
+
 module.exports = {
   register,
   login,
@@ -104,4 +115,5 @@ module.exports = {
   checkUsername,
   resetPassword,
   verifyResetPassword,
+  updatePassword,
 };

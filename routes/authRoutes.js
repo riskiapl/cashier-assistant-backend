@@ -6,6 +6,7 @@ const {
   resend,
   checkUsername,
   verifyResetPassword,
+  updatePassword,
 } = require("../controllers/authController");
 
 const router = express.Router();
@@ -17,5 +18,6 @@ router.put("/resend-otp", resend);
 router.get("/check-username/:username", checkUsername);
 router.post("/reset-password", resetPassword);
 router.put("/verify-reset-password", verifyResetPassword);
+router.put("/update-password", updatePassword);
 
 module.exports = router;

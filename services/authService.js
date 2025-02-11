@@ -250,7 +250,39 @@ async function verifyResetPasswords(email, otpCode) {
 
   await otpEntry.update({ is_verified: true, updated_at: new Date() });
 
-  return { message: "OTP successfully verified" };
+  const member = await members.findOne({ where: { email } });
+  const token = jwt.sign(
+    { id: member.id, email: member.email },
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" }
+  );
+
+  return {
+    message: "OTP successfully verified",
+    token,
+    member: {
+      id: member.id,
+      username: member.username,
+      email: member.email,
+    },
+  };
+}
+
+async function updatePasswords(email, newPassword) {
+  const member = await members.findOne({ where: { email } });
+
+  if (!member) {
+    throw new Error("Member not found");
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  await member.update({
+    password: hashedPassword,
+    plain_password: newPassword,
+    updated_at: new Date(),
+  });
+
+  return { message: "Password has been successfully updated" };
 }
 
 module.exports = {
@@ -261,4 +293,5 @@ module.exports = {
   checkUsernames,
   resetPasswords,
   verifyResetPasswords,
+  updatePasswords,
 };
