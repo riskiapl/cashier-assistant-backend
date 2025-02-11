@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJyaXNraSIsImVtYWlsIjoicmlza2k5N0BnbWFpbC5jb20iLCJzdGF0dXMiOiJhZG1pbiIsImlhdCI6MTczOTI4MTQ2MSwiZXhwIjoxNzM5Mjg1MDYxfQ.Sz-opuyaH6gvPFVYRft3ocf8R51bLT_yOpoWZVLNsoE
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJyaXNraSIsImVtYWlsIjoicmlza2k5N0BnbWFpbC5jb20iLCJzdGF0dXMiOiJtZW1iZXIiLCJpYXQiOjE3MzkyODE5ODMsImV4cCI6MTczOTI4NTU4M30.GtsCevlbCs6BspcPJoFkPxuVopR8_46fv7WiEuFtJY8
 
 ### Get All Members
 GET http://localhost:8000/api/member/view
@@ -9,17 +9,17 @@ GET http://localhost:8000/api/member/view/1
 Authorization: Bearer {{token}}
 
 ### Update Member Data
-PUT http://localhost:8000/api/member/update/3
+PUT http://localhost:8000/api/member/update/1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-    "username": "riski_updated",
-    "email": "riski_updated@gmail.com"
+    "username": "riski97",
+    "email": "riski97@gmail.com"
 }
 
 ### Update Member Password
-PUT http://localhost:8000/api/member/update-password/3
+PUT http://localhost:8000/api/member/update-password/1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
