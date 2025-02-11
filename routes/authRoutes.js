@@ -5,6 +5,7 @@ const {
   verify,
   resend,
   checkUsername,
+  resetPassword,
   verifyResetPassword,
   updatePassword,
 } = require("../controllers/authController");
