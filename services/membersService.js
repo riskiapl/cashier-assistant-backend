@@ -53,8 +53,48 @@ async function deleteMemberData(memberId) {
   }
 }
 
+async function updatePasswords(email, oldPassword, newPassword) {
+  const member = await members.findOne({ where: { email } });
+
+  if (!member) {
+    throw new Error("Member not found");
+  }
+
+  // Check if old password matches
+  const isPasswordValid = await bcrypt.compare(oldPassword, member.password);
+  if (!isPasswordValid) {
+    throw new Error("Current password is incorrect");
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  await member.update({
+    password: hashedPassword,
+    plain_password: newPassword,
+    updated_at: new Date(),
+  });
+
+  return { message: "Password has been successfully updated" };
+}
+
+async function getAllMembers() {
+  const members = await members.findAll({
+    where: { action_type: { [Op.ne]: "D" } },
+  });
+  return members;
+}
+
+async function getMembers(memberId) {
+  const member = await members.findByPk(memberId, {
+    where: { action_type: { [Op.ne]: "D" } },
+  });
+  return member;
+}
+
 module.exports = {
   updateMemberData,
   updateMemberAvatar,
   deleteMemberData,
+  updatePasswords,
+  getAllMembers,
+  getMembers,
 };

@@ -1,13 +1,14 @@
 const checkMemberStatus = async (req, res, next) => {
   try {
     const user = req.user; // Asumsikan user sudah ada di request setelah pengecekan JWT
+    const params = req.params; // Mengambil parameter dari request
 
     if (user.status === "admin") {
       // Admin bisa mengupdate data apapun
       return next();
     }
 
-    if (user.status === "member" && user.id == req.params.id) {
+    if (params.id && user.status === "member" && user.id == params.id) {
       // Member hanya bisa mengupdate data dirinya sendiri
       return next();
     }

@@ -1,0 +1,45 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJyaXNraSIsImVtYWlsIjoicmlza2k5N0BnbWFpbC5jb20iLCJzdGF0dXMiOiJtZW1iZXIiLCJpYXQiOjE3MzkyNjQyNDEsImV4cCI6MTczOTI2Nzg0MX0.hlzB8AekT1ToYYJTDxxz91ZIfNErTAhqvcd6cR4vZv8
+
+### Get All Members
+GET http://localhost:8000/api/member/view
+Authorization: Bearer {{token}}
+
+### Get Member by ID
+GET http://localhost:8000/api/member/view/3
+Authorization: Bearer {{token}}
+
+### Update Member Data
+PUT http://localhost:8000/api/member/update/3
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "username": "riski_updated",
+    "email": "riski_updated@gmail.com"
+}
+
+### Update Member Password
+PUT http://localhost:8000/api/member/update-password/3
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "oldPassword": "cek123",
+    "newPassword": "newpass123"
+}
+
+### Update Member Avatar
+PUT http://localhost:8000/api/member/update-avatar/3
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+Authorization: Bearer {{token}}
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="avatar"; filename="profile.jpg"
+Content-Type: image/jpeg
+
+< ./uploads/avatars/profile.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Delete Member
+DELETE http://localhost:8000/api/member/delete/3
+Authorization: Bearer {{token}}

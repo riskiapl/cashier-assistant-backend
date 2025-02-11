@@ -268,23 +268,6 @@ async function verifyResetPasswords(email, otpCode) {
   };
 }
 
-async function updatePasswords(email, newPassword) {
-  const member = await members.findOne({ where: { email } });
-
-  if (!member) {
-    throw new Error("Member not found");
-  }
-
-  const hashedPassword = await bcrypt.hash(newPassword, 10);
-  await member.update({
-    password: hashedPassword,
-    plain_password: newPassword,
-    updated_at: new Date(),
-  });
-
-  return { message: "Password has been successfully updated" };
-}
-
 module.exports = {
   registers,
   logins,
@@ -293,5 +276,4 @@ module.exports = {
   checkUsernames,
   resetPasswords,
   verifyResetPasswords,
-  updatePasswords,
 };

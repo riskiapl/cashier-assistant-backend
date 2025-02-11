@@ -4,6 +4,9 @@ const {
   updateMemberData,
   updateMemberAvatar,
   deleteMemberData,
+  updatePasswords,
+  getAllMembers,
+  getMembers,
 } = require("../services/membersService");
 
 // Multer configuration for file uploads
@@ -76,8 +79,63 @@ const deleteMember = async (req, res) => {
   }
 };
 
+// Controller to update member password
+async function updatePassword(req, res) {
+  try {
+    const { email, oldPassword, newPassword } = req.body;
+    const response = await updatePasswords(email, oldPassword, newPassword);
+    res.status(200).json({ message: response.message, status: "success" });
+  } catch (error) {
+    res.status(500).json({ message: error.message, status: "failed" });
+  }
+}
+
+// Controller to get all members
+const getAllMember = async (req, res) => {
+  try {
+    const members = await getAllMembers();
+    res.status(200).json({
+      status: "success",
+      data: members,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "failed",
+      message: error.message,
+    });
+  }
+};
+
+// Controller to get single member by ID
+const getMember = async (req, res) => {
+  try {
+    const memberId = req.params.id;
+    const member = await getMembers(memberId);
+
+    if (!member) {
+      return res.status(404).json({
+        status: "failed",
+        message: "Member not found",
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: member,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "failed",
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   updateMember,
   updateAvatar,
   deleteMember,
+  updatePassword,
+  getAllMember,
+  getMember,
 };
