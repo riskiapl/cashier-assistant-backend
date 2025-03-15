@@ -21,5 +21,8 @@ router.put("/verify-reset-password", verifyResetPassword);
 router.put("/update-password", (req, res) => {
   // Logic to update password
 });
+router.delete("/delete-password", (req, res) => {
+  // Logic to delete password
+});
 
 module.exports = router;
