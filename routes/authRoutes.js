@@ -18,5 +18,8 @@ router.put("/resend-otp", resend);
 router.get("/check-username/:username", checkUsername);
 router.post("/reset-password", resetPassword);
 router.put("/verify-reset-password", verifyResetPassword);
+router.put("/update-password", (req, res) => {
+  // Logic to update password
+});
 
 module.exports = router;
