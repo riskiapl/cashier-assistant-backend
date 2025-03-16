@@ -12,8 +12,8 @@ POST http://localhost:8000/api/auth/register
 Content-Type: application/json
 
 {
-    "username": "riski",
-    "email": "riski97@gmail.com",
+    "username": "riko",
+    "email": "rikopratama420@gmail.com",
     "password": "cek123"
 }
 
@@ -22,8 +22,8 @@ POST http://localhost:8000/api/auth/verify-otp
 Content-Type: application/json
 
 {
-    "email": "riski97@gmail.com",
-    "otpCode": "17389"
+    "email": "  rikopratama420@gmail.com",
+    "otpCode": "31519"
 }
 
 ### Resend OTP
