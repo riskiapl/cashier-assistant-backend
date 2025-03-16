@@ -1,51 +1,45 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('members', {
+  return sequelize.define('products', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    username: {
+    name: {
       type: DataTypes.STRING(255),
       allowNull: false
     },
-    email: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+    member_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'members',
+        key: 'id'
+      }
     },
-    password: {
+    image: {
       type: DataTypes.STRING(255),
-      allowNull: false
+      allowNull: true
     },
-    plain_password: {
-      type: DataTypes.STRING(255),
+    price: {
+      type: DataTypes.DECIMAL,
       allowNull: false
     },
     action_type: {
       type: DataTypes.STRING(255),
       allowNull: false,
       defaultValue: "I"
-    },
-    avatar: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-      defaultValue: "NULL"
-    },
-    status: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      defaultValue: "member"
     }
   }, {
     sequelize,
-    tableName: 'members',
+    tableName: 'products',
     schema: 'public',
     timestamps: true,
     createdAt: 'created_at', updatedAt: 'updated_at', indexes: [
       {
-        name: "members_pkey",
+        name: "products_pkey",
         unique: true,
         fields: [
           { name: "id" },
