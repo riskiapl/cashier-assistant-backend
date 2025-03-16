@@ -23,7 +23,7 @@ Content-Type: application/json
 
 {
     "email": "riski97@gmail.com",
-    "otpCode": "17389"
+    "otpCode": "69531"
 }
 
 ### Resend OTP

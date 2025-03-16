@@ -28,9 +28,14 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     action_type: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.CHAR(1),
       allowNull: false,
       defaultValue: "I"
+    },
+    stock: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
     }
   }, {
     sequelize,

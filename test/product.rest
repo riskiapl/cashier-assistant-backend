@@ -1,11 +1,12 @@
 ### Create new product
-POST http://localhost:8000/api/product
+POST http://localhost:8000/api/product/new
 Content-Type: application/json
 
 {
     "name": "Coffee Latte",
     "member_id": 1,
-    "price": "100",
+    "price": 10000,
+    "stock": 100
 }
 
 ### Get all products
