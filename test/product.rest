@@ -1,0 +1,30 @@
+### Create new product
+POST http://localhost:8000/api/product/new
+Content-Type: application/json
+
+{
+    "name": "Coffee Latte",
+    "member_id": 1,
+    "price": 10000,
+    "stock": 100
+}
+
+### Get all products
+GET http://localhost:8000/api/product/view
+
+### Get product by ID
+GET http://localhost:8000/api/product/view/1
+
+### Update product
+PUT http://localhost:8000/api/product/update/1
+Content-Type: application/json
+
+{
+    "name": "Coffee Latte Grande",
+    "price": 30000,
+    "stock": 50,
+    "description": "Large hot coffee with fresh milk"
+}
+
+### Delete product
+DELETE http://localhost:8000/api/product/delete/1

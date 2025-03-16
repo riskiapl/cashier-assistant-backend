@@ -13,6 +13,7 @@ const {
   removeUnusedKey,
 } = require("./middlewares/helperMiddleware");
 const dotenv = require("dotenv");
+const productRoutes = require("./routes/productRoutes");
 
 const env = process.env.NODE_ENV || "development";
 dotenv.config({ path: `.env.${env}` });
@@ -32,7 +33,7 @@ app.use(removeUnusedKey);
 // Semua Route
 app.use("/api/auth", authRoutes);
 app.use("/api/member", verifyToken, membersRoutes);
-
+app.use("/api/product", productRoutes);
 // Route sederhana
 app.get("/", (req, res) => {
   res.send("Hello, Express!");
